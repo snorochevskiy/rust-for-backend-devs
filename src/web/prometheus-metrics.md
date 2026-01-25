@@ -356,7 +356,7 @@ async fn get_metrics(state: State<Arc<AppState>>) -> String {
 
 Итак, запустим наш сервер.
 
-Сперва перейдём в броузере на [http://localhost:8080/endpoint-1](http://localhost:8080/endpoint-1) и 9 раз обновим страницу, чтобы в сумме иметь 10 обращений к эндпоинту.
+Сперва перейдём в браузере на [http://localhost:8080/endpoint-1](http://localhost:8080/endpoint-1) и 9 раз обновим страницу, чтобы в сумме иметь 10 обращений к эндпоинту.
 
 Далее перейдём на [http://localhost:8080/metrics](http://localhost:8080/metrics), чтобы получить метрики:
 

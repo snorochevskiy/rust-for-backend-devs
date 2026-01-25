@@ -10,7 +10,7 @@
 
 Теперь давайте разберёмся как экстракторы устроены.
 
-Чтобы создать экстрактор, нужно реализовать один из двух трэйтов: [FromRequestParts](https://docs.rs/axum/latest/axum/extract/trait.FromRequestParts.html) или [FromReques](https://docs.rs/axum/latest/axum/extract/trait.FromRequest.html).
+Чтобы создать экстрактор, нужно реализовать один из двух трэйтов: [FromRequestParts](https://docs.rs/axum/latest/axum/extract/trait.FromRequestParts.html) или [FromRequest](https://docs.rs/axum/latest/axum/extract/trait.FromRequest.html).
 
 ### FromRequestParts
 
@@ -239,7 +239,7 @@ Session ID: 1111-1111-1111, User name: John Doe
 
 ### FromRequest
 
-Трэйт `FromReques` имеет вид:
+Трэйт `FromRequest` имеет вид:
 
 ```rust,noplayground
 pub trait FromRequest<S, M = ViaRequest>: Sized {

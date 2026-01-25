@@ -83,7 +83,7 @@ async fn hello() -> &'static str {
 $ cargo run
 ```
 
-и перейдём в броузере на [http://localhost:8080/hello](http://localhost:8080/hello).
+и перейдём в браузере на [http://localhost:8080/hello](http://localhost:8080/hello).
 
 В консоле должна появится лог-запись с уровнем `INFO` от приложениея test_axum.
 
