@@ -91,7 +91,7 @@
 * [Тестирование эндпоинтов](web/endpoints-testing.md)
 * [SQLx](web/sqlx.md)
 * [Версионирование структуры БД](web/db-migrate.md)
-* [Текст контейнеры](web/testcontainers.md)
+* [Тест контейнеры](web/testcontainers.md)
 * [SQLx макросы](web/sqlx-macros.md)
 * [Axum и SQLx](web/axum-and-sqlx.md)
 * [Структура бекенда](web/backend-structure.md)
