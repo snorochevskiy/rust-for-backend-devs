@@ -50,7 +50,7 @@ pub trait Service<Request> {
 Такая абстракция — как раз то, что нужно для построения сетевого сервера. Например:
 
 * Функции-обработчики запросов, которые мы регистрируем в роутере, по своей сути являются асинхронными функциями, которые принимают HTTP Request, и возвращают HTTP Response.
-* Милдваре, с которыми мы познакомились в прошлой главе, так же, по сути, являются асинхронными функциями, принимающими HTTP Request, и возвращающими HTTP Response.
+* Мидлваре, с которыми мы познакомились в прошлой главе, так же, по сути, являются асинхронными функциями, принимающими HTTP Request, и возвращающими HTTP Response.
 
 Хорошо, мы убедились, что такие сущности как обработчики запросов и мидлваре можно абстрагировать через трэйт `Service`. Но что это нам даёт?
 
@@ -327,8 +327,8 @@ async fn hello() -> &'static str {
 
 * сервис [ServeDir](https://docs.rs/tower-http/latest/tower_http/services/struct.ServeDir.html) — подобен вышерассмотренному `ServeFile`, но возвращает не конкретный файл, а запрошенные файлы из указанной директории.
 * сервис [Redirect](https://docs.rs/tower-http/latest/tower_http/services/struct.Redirect.html) — позволяет переадрессовать запрос на другой URL
-* милдваре [CompressionLayer](https://docs.rs/tower-http/latest/tower_http/compression/struct.CompressionLayer.html) — сжимает ответ на запрос при помощи указанного кодека (gzip, deflate, zstd и т.д.)
-* милдваре [RequestDecompressionLayer](https://docs.rs/tower-http/latest/tower_http/decompression/struct.RequestDecompressionLayer.html) — автоматически декодирует тело запроса, зажатое кодеком
+* мидлваре [CompressionLayer](https://docs.rs/tower-http/latest/tower_http/compression/struct.CompressionLayer.html) — сжимает ответ на запрос при помощи указанного кодека (gzip, deflate, zstd и т.д.)
+* мидлваре [RequestDecompressionLayer](https://docs.rs/tower-http/latest/tower_http/decompression/struct.RequestDecompressionLayer.html) — автоматически декодирует тело запроса, зажатое кодеком
 * мидлваре [NormalizePathLayer](https://docs.rs/tower-http/latest/tower_http/normalize_path/struct.NormalizePathLayer.html) — убирает ненужные знаки `/` в конце URL пути
 * мидлваре [RequestBodyLimitLayer](https://docs.rs/tower-http/latest/tower_http/limit/struct.RequestBodyLimitLayer.html) — отвергает с 413-м кодом те запросы, чьё тело превышает заданный размер
 * мидлваре [TimeoutLayer](https://docs.rs/tower-http/latest/tower_http/timeout/struct.TimeoutLayer.html) — позволяет установить максимальное время выполнения эндпоинта, после истечения которого будет возвращён указанный HTTP код

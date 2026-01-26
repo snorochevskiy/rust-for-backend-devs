@@ -89,7 +89,7 @@ test_backend/
 
 ## Крэйт persist
 
-Сначала добавим всё необходимые зависимости в `persis/Cargo.toml`:
+Сначала добавим все необходимые зависимости в `persis/Cargo.toml`:
 
 ```toml
 [package]
@@ -394,7 +394,7 @@ pub async fn create_new_account(
 
 Как видите, эндпоинты просто достают `AccountService` из состояния, и вызывают его методы.
 
-И на последок — `server/src/main.rs`. В главной функции мы просто вызывается функциональность из `lib.rs`.
+И на последок — `server/src/main.rs`. В главной функции мы просто вызываем функциональность из `lib.rs`.
 
 ```rust,noplayground
 #[tokio::main]
