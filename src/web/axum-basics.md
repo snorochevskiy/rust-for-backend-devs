@@ -107,7 +107,7 @@ async fn hello() -> &'static str {
 Мы смогли вернуть из функции-обработчика запроса значение типа `&'static str` потому, что существует реализация `IntoResponse` для `&'static str`.\
 Для справки: она находится в крэйте [axum-core](https://github.com/tokio-rs/axum/tree/main/axum-core) в файле `src/response/into_reponse.rs`.
 
-Так же трэйт `IntoResponse` реализован еще для целого ряда типов, основные их которых:
+Также трэйт `IntoResponse` реализован еще для целого ряда типов, основные их которых:
 
 * `()` — ответ с кодом 200 и пустым телом
 * [HeaderMap](https://docs.rs/http/latest/http/header/struct.HeaderMap.html) — ответ с кодом 200, пустым телом, и дополнительными заголовоками
@@ -223,7 +223,7 @@ async fn main() {
     ```rust,noplayground
     .route("/часть/пути/{переменная}", get(функция-обработчик запроса))
     ```
-2.  В функции-обработчике запроса, заинжектить аргумент по средствам обёртки [Path](https://docs.rs/axum/latest/axum/extract/path/struct.Path.html).
+2.  В функции-обработчике запроса, заинжектить аргумент посредством обёртки [Path](https://docs.rs/axum/latest/axum/extract/path/struct.Path.html).
 
     ```rust,noplayground
     async обрабочик(переменная: Path<String>) -> Response { ... }
@@ -275,7 +275,7 @@ async fn hello(Path((greeting, name)): Path<(String, String)>) -> String {
 }
 ```
 
-В процессе инжекции, аргументы так же могут быть преобразованы в числовой тип.
+В процессе инжекции, аргументы также могут быть преобразованы в числовой тип.
 Например, создадим эндпоинт, который принимает два числа и возвращает их сумму:
 
 ```rust,noplayground
@@ -379,7 +379,7 @@ let app = Router::new().route("/api/users", get(list_users).post(create_user));
 
 Для каждого из HTTP методов имеется соответствующая функция в модуле [axum::routing](https://docs.rs/axum/latest/axum/routing/index.html): `get`, `post`, `put`, `delete`, `patch`, `head`, `option` и `trace`.
 
-Так же, существует функция [axum::routing::any](https://docs.rs/axum/latest/axum/routing/method_routing/fn.any.html), которая позволяет вызывать обрабочик для любого HTTP метода:
+Также, существует функция [axum::routing::any](https://docs.rs/axum/latest/axum/routing/method_routing/fn.any.html), которая позволяет вызывать обрабочик для любого HTTP метода:
 
 ```rust,noplayground
 let app = Router::new().route("/hello", any(hello));
@@ -602,7 +602,7 @@ Headers: host=localhost:8080,user-agent=Mozilla/5.0 (X11; Linux x86\_64; rv:145.
 
 ***
 
-Так же можно заинжектить целиком весь объект, представляющий заголовочную часть HTTP запроса. Делается это при помощи типа [Parts](https://docs.rs/http/latest/http/request/struct.Parts.html), который выглядит так:
+Также можно заинжектить целиком весь объект, представляющий заголовочную часть HTTP запроса. Делается это при помощи типа [Parts](https://docs.rs/http/latest/http/request/struct.Parts.html), который выглядит так:
 
 ```rust,noplayground
 pub struct Parts {

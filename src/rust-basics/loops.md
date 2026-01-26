@@ -27,23 +27,23 @@ fn main() {
 
 В Rust нет цикла do-while, но при большой необходимости его можно имитировать через `while`:
 
-<table>
+<table class="two-side">
 <tr>
 <td>
 Такой код
 
 ```rust
 fn main() {
-  let mut start = 0;
-  let mut sum = 0;
+    let mut start = 0;
+    let mut sum = 0;
 
-  while {
-    sum += start;
-    start += 1;
-    start < 10
-  } {};
+    while {
+        sum += start;
+        start += 1;
+        start < 10
+    } {};
 
-  println!("sum: {}", sum);
+    println!("sum: {}", sum);
 }
 ```
 
@@ -53,16 +53,15 @@ fn main() {
 
 ```rust
 fn main() {
-  let mut start = 0;
-  let mut sum = 0;
+    let mut start = 0;
+    let mut sum = 0;
 
-do {
-    sum += start;
-    start += 1;
-} while start < 10;
+    do {
+        sum += start;
+        start += 1;
+    } while start < 10;
 
-
-  println!("sum: {}", sum);
+    println!("sum: {}", sum);
 }
 ```
 
@@ -87,23 +86,23 @@ loop {
 
 ```rust
 fn main() {
-  let maximum = 30;
-  let mut a = 0;
-  let mut b = 1;
-  print!("{a} {b}");
-  loop {
-    let next = a + b;
-    if next > maximum {
-      break;
+    let maximum = 30;
+    let mut a = 0;
+    let mut b = 1;
+    print!("{a} {b}");
+    loop {
+        let next = a + b;
+        if next > maximum {
+            break;
+        }
+        print!(" {next}");
+        a = b;
+        b = next;
     }
-    print!(" {next}");
-    a = b;
-    b = next;
-  }
 }
 ```
 
-Оператор `break` для цикла `loop` иимеет еще одну функциональность: он возвращает значение.
+Оператор `break` для цикла `loop` имеет еще одну функциональность: он возвращает значение.
 
 ```rust
 let mut counter = 0;
@@ -120,7 +119,7 @@ println!("The result is {}", result); // 20
 
 ## for
 
-В Rust отсутствует "классический" цикла **for** (как в C), только **for-each**, который предназначен для перебора элементов последовательностей.
+В Rust отсутствует "классический" цикл **for** (как в C) — только **for-each**, который предназначен для перебора элементов последовательностей.
 
 Синтаксис:
 
@@ -142,11 +141,11 @@ fn main() {
 }
 ```
 
-При помощи `for` можно перебирать элементы массивов, слайсов, векторов, и еще целого ряда коллекций.
+При помощи `for` можно перебирать элементы массивов, слайсов, векторов и еще целого ряда коллекций.
 
 ## Перебор диапазона
 
-В Rust нет "классического" цикла for вида `for (int i=0; i<N; i++)` . Однако такой перебор числового диапазона требуется довольно часто.
+В Rust нет "классического" цикла for вида `for (int i=0; i<N; i++)`. Однако такой перебор числового диапазона требуется довольно часто.
 
 К счастью, в Rust есть диапазоны (Range), которые задаются как `начало .. конец`, и могут использоваться для перебора элементов в цикле `for`.
 
@@ -163,5 +162,5 @@ for i in 0 .. 10 {
 
 > [!NOTE]
 > Детальнее о цикле for мы поговорим в главах [Владение](ownership.md) и [Итераторы](iterators.md).
-> Так же в главе про [Итераторы](iterators.md) мы подробее разберём диапазоны.
+> Также в главе про [Итераторы](iterators.md) мы подробнее разберём диапазоны.
 

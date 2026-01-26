@@ -220,4 +220,4 @@ let connection_options = PgConnectOptions::new()
 
 Как видите, код запуска postgresql контейнера стал заметно короче и проще.
 
-Так же testcontainers-modules предлагает подобные обёртки для Anvil, Azurite, CockroachDB, Clickhouse, Consul, DynamoDB, ElasticSearch, Kafka, Localstack, Minio, MongoDB, MS SQL Server, MySQL, Nats, Neo4J, OpenLDAP, Oracle, OrientDB, RabbitMQ, Redis, RQLitem Scylladb, Solr, SurrealDB и Zookeeper.
+Также testcontainers-modules предлагает подобные обёртки для Anvil, Azurite, CockroachDB, Clickhouse, Consul, DynamoDB, ElasticSearch, Kafka, Localstack, Minio, MongoDB, MS SQL Server, MySQL, Nats, Neo4J, OpenLDAP, Oracle, OrientDB, RabbitMQ, Redis, RQLitem Scylladb, Solr, SurrealDB и Zookeeper.

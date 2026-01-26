@@ -11,7 +11,7 @@
 * Сервисы, с которых нужно собирать метрики, должны иметь эндпоинт (для простоты, мы будем считать, что его путь — `/metrics`, но его путь может быть любым), который выдаёт метрики в [формате prometheus метрик](https://prometheus.io/docs/concepts/data_model/).
 * Prometheus сервис раз в определённое время вызывает эндпоинт, чтобы получить значение метрик и сохранить их. Этот процесс называют скрапингом (scraping — соскабливание).
 * Далее, метрики из Prometheus сервиса можно запрашивать в агрегированном виде. Например, совместно с Prometheus часто используют систему Graphana — сервис с веб интерфейсом, который отображает значения метрик в виде графиков и диаграм.
-* Так же, Prometheus сервер можно настроить таким образом, чтобы при достижении определёнными метриками пороговых значений, он генерировал алёрты. При помощи сервиса [AlertManager](https://prometheus.io/docs/alerting/latest/alertmanager/), можно легко настроить интеграцию Prometheus алёртов с такими сервисами как PagerDuty.
+* Также, Prometheus сервер можно настроить таким образом, чтобы при достижении определёнными метриками пороговых значений, он генерировал алёрты. При помощи сервиса [AlertManager](https://prometheus.io/docs/alerting/latest/alertmanager/), можно легко настроить интеграцию Prometheus алёртов с такими сервисами как PagerDuty.
 
 В этой главе мы не будем рассматривать установку и настройку Prometheus сервера, а лишь ограничимся созданием эндпоинта `/metrics`, который отдаёт метрики в том формате, который ожидает Prometheus сервер.
 
@@ -28,7 +28,7 @@
 * [metrics-prometheus](https://crates.io/crates/prometheus) — реализация фасада, которая оборачивает крэйт [prometheus](https://crates.io/crates/prometheus)
 
 > [!NOTE]
-> Существует так же другой крэйт-реализация фасада metrics для Prometheus — [**metrics-exporter-prometheus**](https://crates.io/crates/metrics-exporter-prometheus). Он имеет встроенный HTTP сервер, поэтому может оказаться более удобным для приложений, которые не экспортируют свой HTTP API. Но для наших примеров, в этой главе, мы будем использовать крэйт `metrics-prometheus` так как он проще, и имеет более очевидный API.
+> Существует также другой крэйт-реализация фасада metrics для Prometheus — [**metrics-exporter-prometheus**](https://crates.io/crates/metrics-exporter-prometheus). Он имеет встроенный HTTP сервер, поэтому может оказаться более удобным для приложений, которые не экспортируют свой HTTP API. Но для наших примеров, в этой главе, мы будем использовать крэйт `metrics-prometheus` так как он проще, и имеет более очевидный API.
 
 Для работы с метриками нам нужно будет добавить в `Cargo.toml` следующие зависимости:
 
@@ -123,7 +123,7 @@ struct AppState {
 
 #[tokio::main]
 async fn main() {
-    // Инициализируем объект для сбора метрик. Этот объект так же используется для 
+    // Инициализируем объект для сбора метрик. Этот объект также используется для 
     // форматирования значений метрик, запрашиваемых Prometheus сервером.
     let recorder = metrics_prometheus::install();
 
@@ -162,7 +162,7 @@ async fn get_metrics(state: State<Arc<AppState>>) -> String {
 hello_calls 1
 ```
 
-Мы так же можем сразу инициализировать метрику, например нулём. Сделать это можно при помощи метода [absolute](https://docs.rs/metrics/latest/metrics/struct.Counter.html#method.absolute):
+Мы также можем сразу инициализировать метрику, например нулём. Сделать это можно при помощи метода [absolute](https://docs.rs/metrics/latest/metrics/struct.Counter.html#method.absolute):
 
 ```rust,noplayground
 let recorder = metrics_prometheus::install();
