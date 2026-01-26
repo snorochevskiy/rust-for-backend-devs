@@ -1,12 +1,12 @@
 # Обработка ошибок
 
-В главе про тип [Result](../rust-basics/result.md) мы познакомились с основами обработки ошибок. В этой главе мы рассмотрим как ошибки принято обрабатывать в бекенд приложениях.
+В главе про тип [Result](../rust-basics/result.md) мы познакомились с основами обработки ошибок. В этой главе мы рассмотрим, как ошибки принято обрабатывать в бекенд приложениях.
 
 ## thiserror
 
-Давайте представим, что мы разрабатываем некий сервис, который отвечает за резервирование товаров. Для начала, сервис будет содержать только одну функцию, которая принимает два параметра: ID товара для резервирования и желаемое количество экземпляров.
+Давайте представим, что мы разрабатываем некий сервис, который отвечает за резервирование товаров. Для начала сервис будет содержать только одну функцию, которая принимает два параметра: ID товара для резервирования и желаемое количество экземпляров.
 
-Очевидно, что в такой функциональности могут возникуть минимум две ошибки:
+Очевидно, что в такой функциональности могут возникнуть минимум две ошибки:
 
 * попытка резервирования неизвестного товара
 * попытка зарезервировать больше экземпляров, чем имеется в наличии
@@ -30,17 +30,17 @@ trait ReservationService {
 
 enum ReserveError {
     NoSuchProduct { id: u64 },
-    NotEnought { asked: u64, available: u64 },
+    NotEnough { asked: u64, available: u64 },
 }
 ```
 
-Так же из секции [про трэйт Error](../rust-basics/result.md#trait-error) мы знаем, что для типов представляющих ошибку, рекомендуется реализовать трэйт [std::error::Error](https://doc.rust-lang.org/std/error/trait.Error.html), поэтому реализуем его для нашего типа ошибки — `ReserveError`:
+Также из секции [про трэйт Error](../rust-basics/result.md#trait-error) мы знаем, что для типов, представляющих ошибку, рекомендуется реализовать трэйт [std::error::Error](https://doc.rust-lang.org/std/error/trait.Error.html), поэтому реализуем его для нашего типа ошибки — `ReserveError`:
 
 ```rust,noplayground
 #[derive(Debug)]
 enum ReserveError {
   NoSuchProduct { id: u64 },
-  NotEnought { asked: u64, available: u64 },
+  NotEnough { asked: u64, available: u64 },
 }
 
 impl std::fmt::Display for ReserveError {
@@ -49,7 +49,7 @@ impl std::fmt::Display for ReserveError {
     match self {
       NoSuchProduct { id } =>
         write!(f, "No product with ID {id}"),
-      NotEnought {asked, available} =>
+      NotEnough {asked, available} =>
         write!(f, "Asked {asked}, but available {available}"),
     }
   }
@@ -58,7 +58,7 @@ impl std::fmt::Display for ReserveError {
 impl std::error::Error for ReserveError { }
 ```
 
-Не трудно заметить, что реализация трэйта `Error` является громоздкой, и содержит в себе шаблонный код, который был бы одинаковым и в реализациях `Error` для других типов. К счастью, существует сторонняя библиотека [thiserror](https://crates.io/crates/thiserror), которая сильно упрощает создание типов ошибок.
+Нетрудно заметить, что реализация трэйта `Error` является громоздкой, и содержит в себе шаблонный код, который был бы одинаковым и в реализациях `Error` для других типов. К счастью, существует сторонняя библиотека [thiserror](https://crates.io/crates/thiserror), которая сильно упрощает создание типов ошибок.
 
 Вот как выглядит эквивалентное определение нашего типа `ReserveError` при помощи thiserror:
 
@@ -70,13 +70,13 @@ enum ReserveError {
   #[error("No product with ID {id}")]
   NoSuchProduct { id: u64 },
   #[error("Asked {asked}, but available {available}")]
-  NoEnoughtQuantity { asked: u64, available: u64 },
+  NoEnoughQuantity { asked: u64, available: u64 },
 }
 ```
 
-Бибилиотека thiserror содержит в себе процедурный макрос, который вызывается для перечислений и стуруктур, аннотированных с `#[derive(thiserror::Error)]`. Этот макрос генерирует реализацию `std::fmt::Display` и `std::error::Error`, фактически делая то, что до этого мы сделали вручную.
+Библиотека thiserror содержит в себе процедурный макрос, который вызывается для перечислений и структур, аннотированных с `#[derive(thiserror::Error)]`. Этот макрос генерирует реализацию `std::fmt::Display` и `std::error::Error`, фактически делая то, что до этого мы сделали вручную.
 
-Чтобы лучше понять как это работает в целом, давайте напишем небольшую программу, использующую нашу функциональностью по резервированию товаров.
+Чтобы лучше понять, как это работает в целом, давайте напишем небольшую программу, использующую нашу функциональность по резервированию товаров.
 
 Создайте новый проект:
 
@@ -84,7 +84,7 @@ enum ReserveError {
 cargo new test_rust
 ```
 
-Добавте thiserror в `Cargo.toml`:
+Добавьте thiserror в `Cargo.toml`:
 
 ```toml
 [package]
@@ -96,7 +96,7 @@ edition = "2024"
 thiserror = "1"
 ```
 
-Теперь `src/main.rs`. Напишем реализацию хранилища, из которого мы будем резервировать товары. Для простоты, будем хранить товары в хеш-таблице.
+Теперь `src/main.rs`. Напишем реализацию хранилища, из которого мы будем резервировать товары. Для простоты будем хранить товары в хеш-таблице.
 
 ```rust
 use std::{
@@ -120,7 +120,7 @@ enum ReserveError {
     #[error("No product with ID {id}")]
     NoSuchProduct { id: u64 },
     #[error("Asked {asked}, but available {available}")]
-    NotEnought { asked: u64, available: u64 },
+    NotEnough { asked: u64, available: u64 },
 }
 
 // Примитивная реализация склада в виде хеш-таблицы: ID товара->количество
@@ -134,7 +134,7 @@ impl ReservationService for ReservationImpl {
         let mut guard = self.storage.lock().unwrap();
         if let Some(stock) = guard.get_mut(&id) {
             if *stock < quantity {
-                Err(ReserveError::NotEnought {
+                Err(ReserveError::NotEnough {
                     asked: quantity,
                     available: *stock,
                 })
@@ -165,7 +165,7 @@ fn main() {
     // Err(NoSuchProduct { id: 112 })
 
     println!("{:?}", reservation_service.reserve(111, 51));
-    // Err(NoEnoughtQuantity { asked: 51, available: 50 })
+    // Err(NoEnoughQuantity { asked: 51, available: 50 })
 
     println!("{:?}", reservation_service.reserve(111, 10));
     // Ok(Reservation { reservation_id: 1, product_id: 111, quantity: 10 })
@@ -174,7 +174,7 @@ fn main() {
 
 ## Переоборачивание ошибок
 
-Давайте теперь расширим наше приложение: добавим еще функциональность для планирования адресной доставки, и функциональность покупки, которая будет объединять в себе резервирование и доставку.
+Давайте теперь расширим наше приложение: добавим еще функциональность для планирования адресной доставки и функциональность покупки, которая будет объединять в себе резервирование и доставку.
 
 Предполагается такая логика.
 
@@ -199,7 +199,7 @@ enum ReserveError {
     #[error("No product with ID {id}")]
     NoSuchProduct { id: u64 },
     #[error("Asked {asked}, but available {available}")]
-    NotEnought { asked: u64, available: u64 },
+    NotEnough { asked: u64, available: u64 },
 }
 
 trait ReservationService {
@@ -243,7 +243,7 @@ struct Purchase {
 #[derive(Debug, Error)]
 enum PurchaseError {
     #[error("Nested servation error: (0)")]
-    ReservationFailed(#[from] ResereError)
+    ReservationFailed(#[from] ReserveError)
     #[error("Nested shipping error: (0)")]
     ShippingFailed(#[from] ShipmentError)
 }
@@ -255,7 +255,7 @@ trait PurchaseService {
 }
 ```
 
-Обратите внимание, что `PurchaseError` просто оборачивает ошибки от низлежащих сервисов при помощи аннотации `#[from]`. Эта аннотация говорит thiserror, что нужно сгенерировать соответствующую реализцию трэйта [From](https://doc.rust-lang.org/std/convert/trait.From.html), с которым мы познакомились в главе про [основные трэйты](common-traits.md#from-into).
+Обратите внимание, что `PurchaseError` просто оборачивает ошибки от низлежащих сервисов при помощи аннотации `#[from]`. Эта аннотация говорит thiserror, что нужно сгенерировать соответствующую реализацию трэйта [From](https://doc.rust-lang.org/std/convert/trait.From.html), с которым мы познакомились в главе про [основные трэйты](common-traits.md#from-into).
 
 Например, для примера выше будут сгенерированы:
 
@@ -264,9 +264,9 @@ impl From<ReservationError> for PurchaseError { ... }
 impl From<ShipmentError> for PurchaseError { ... }
 ```
 
-Таким образом, "оборачивая" одну ошибку в другую, мы одновременно и сохраняем информацию о причинах возникновения проблемы, и имеем ошибки специфичные для текущего API.
+Таким образом, "оборачивая" одну ошибку в другую, мы одновременно и сохраняем информацию о причинах возникновения проблемы, и имеем ошибки, специфичные для текущего API.
 
-Давайте, расширим наш пример так, чтобы продемонстрировать как ошибка, возникшая в низлежащих `ReservationService` и `ShipmentService`, возвращается из метода `PurchaseService::purchase` обёрнутой в `PurchaseError`.
+Давайте расширим наш пример так, чтобы продемонстрировать, как ошибка, возникшая в низлежащих `ReservationService` и `ShipmentService`, возвращается из метода `PurchaseService::purchase` обёрнутой в `PurchaseError`.
 
 Код для `src/main.rs`:
 
@@ -286,15 +286,15 @@ struct Reservation {
 }
 
 #[derive(Debug, thiserror::Error)]
-enum ResereError {
+enum ReserveError {
     #[error("No product with ID {id}")]
     NoSuchProduct { id: u64 },
     #[error("Asked {asked}, but available {available}")]
-    NotEnought { asked: u64, available: u64 },
+    NotEnough { asked: u64, available: u64 },
 }
 
 trait ReservationService {
-    fn reserve(&self, id: u64, quantity: u64) -> Result<Reservation, ResereError>;
+    fn reserve(&self, id: u64, quantity: u64) -> Result<Reservation, ReserveError>;
 }
 
 struct ReservationImpl {
@@ -312,11 +312,11 @@ impl ReservationImpl {
 }
 
 impl ReservationService for ReservationImpl {
-    fn reserve(&self, id: u64, quantity: u64) -> Result<Reservation, ResereError> {
+    fn reserve(&self, id: u64, quantity: u64) -> Result<Reservation, ReserveError> {
         let mut guard = self.storage.lock().unwrap();
         if let Some(stock) = guard.get_mut(&id) {
             if *stock < quantity {
-                Err(ResereError::NotEnought {
+                Err(ReserveError::NotEnough {
                     asked: quantity,
                     available: *stock,
                 })
@@ -329,7 +329,7 @@ impl ReservationService for ReservationImpl {
                 })
             }
         } else {
-            Err(ResereError::NoSuchProduct { id })
+            Err(ReserveError::NoSuchProduct { id })
         }
     }
 }
@@ -395,7 +395,7 @@ struct Purchase {
 #[derive(Debug, thiserror::Error)]
 enum PurchaseError {
     #[error("Nested servation error: (0)")]
-    ReservationFailed(#[from] ResereError),
+    ReservationFailed(#[from] ReserveError),
     #[error("Nested shipping error: (0)")]
     ShippingFailed(#[from] ShipmentError),
 }
@@ -462,7 +462,7 @@ fn main() {
     // Err(ReservationFailed(NoSuchProduct { id: 112 }))
 
     println!("{:?}", purchase_service.purchase(111, 51, "addr 1"));
-    // Err(ReservationFailed(NotEnought { asked: 51, available: 50 }))
+    // Err(ReservationFailed(NotEnough { asked: 51, available: 50 }))
 
     println!("{:?}", purchase_service.purchase(111, 10, "invalid"));
     // Err(ShippingFailed(InvalidAddress { address: "invalid" }))
@@ -476,11 +476,11 @@ fn main() {
 
 ## Box\<dyn Error>
 
-Существует ряд ситуаций, когда отсутствует возможность как-то корректно обработать ошибку. Например,  если в бекенд приложении в процессе обработки клиенского запроса возникает ошибка, то довольно часто единственное что можно сделать — это залогировать ошибку и ответить клиенту 500-м HTTP кодом.
+Существует ряд ситуаций, когда отсутствует возможность как-то корректно обработать ошибку. Например, если в бэкенд-приложении в процессе обработки клиентского запроса возникает ошибка, то довольно часто единственное, что можно сделать — это залогировать ошибку и ответить клиенту 500-м HTTP кодом.
 
-В этом случае, переоборачивание ошибок может оказаться бесполезной тратой услилий, или даже наоборот, усложнить код. Поэтому вместо переоборачивания ошибок, можно просто "пробрасывать их наверх" в виде "обезличенного" трэйт-объекта `Box<dyn Error>`.
+В этом случае переоборачивание ошибок может оказаться бесполезной тратой усилий или даже, наоборот, усложнить код. Поэтому вместо переоборачивания ошибок можно просто "пробрасывать их наверх" в виде "обезличенного" трэйт-объекта `Box<dyn Error>`.
 
-Рассмотрим пример: мы напишем две функции, которые возвращают два разных типа ошибок, и функцию которая внутри себя вызывает эти две функии, и пробрасывает полученные от них ошибке в виде `Box<dyn std::error::Error>>`.
+Рассмотрим пример: мы напишем две функции, которые возвращают два разных типа ошибок, и функцию, которая внутри себя вызывает эти две функции и пробрасывает полученные от них ошибки в виде `Box<dyn std::error::Error>>`.
 
 ```rust
 #[derive(Debug, thiserror::Error)]
@@ -528,7 +528,7 @@ Underlying error: Error A
 Underlying error: Error B
 ```
 
-Итак, теперь мы умеем возвращать любую ошибку не заботясь о её конкретном типе. Но иногда есть необходимость отдельно обработать какой-то один вид ошибок. Это можно сделать при помощи метода [downcast_ref](https://doc.rust-lang.org/std/error/trait.Error.html#method.downcast_ref), который определён для трэйт-объекта `dyn Error`.
+Итак, теперь мы умеем возвращать любую ошибку, не заботясь о её конкретном типе. Но иногда есть необходимость отдельно обработать какой-то один вид ошибок. Это можно сделать при помощи метода [downcast_ref](https://doc.rust-lang.org/std/error/trait.Error.html#method.downcast_ref), который определён для трэйт-объекта `dyn Error`.
 
 ```rust
 # #[derive(Debug, thiserror::Error)]
@@ -576,14 +576,14 @@ fn main() {
 
 anyhow предлагает свой тип "обезличенной" ошибки [anyhow::Error](https://docs.rs/anyhow/latest/anyhow/struct.Error.html) и свой тип результата [anyhow::Result\<T>](https://docs.rs/anyhow/latest/anyhow/type.Result.html), который является псевдонимом для `std::result::Result<T, anyhow::Error>`.
 
-Для начала рассмотрим простейшую программу, которая демонстрирует как anyhow встраивается в процесс обработки ошибок.
+Для начала рассмотрим простейшую программу, которая демонстрирует, как anyhow встраивается в процесс обработки ошибок.
 
 ```rust,noplayground
 #[derive(Debug, thiserror::Error)]
 #[error("My custom error")]
 struct MyError;
 
-fn fail_with_specific_error() -> Result<(), MyError> { // вернёт специфичную ошибка
+fn fail_with_specific_error() -> Result<(), MyError> { // вернёт специфичную ошибку
     Err(MyError)
 }
 
@@ -612,9 +612,9 @@ fn main() {
 
 ### backtrace
 
-`anyhow::Error` не просто оборачивает ошибку, но так же может добавить бэктрэйс, который позволит легко идентифицировать точное место возникновения ошибки.
+`anyhow::Error` не просто оборачивает ошибку, но также может добавить бэктрэйс, который позволит легко идентифицировать точное место возникновения ошибки.
 
-По умолчанию бэктрэйсы не создаются (так как это ресурсозатратный процесс), и чтобы их включить, необходимо перед запуском программы выставить переменную окружения `RUST_LIB_BACKTRACE=1`.
+По умолчанию бэктрэйсы не создаются (так как это ресурсозатратный процесс) и чтобы их включить, необходимо перед запуском программы выставить переменную окружения `RUST_LIB_BACKTRACE=1`.
 
 Давайте перепишем предыдущий пример так, чтобы в нём выводился бэктрэйс:
 
@@ -714,8 +714,8 @@ fn my_func() -> anyhow::Result<Тип> {
 use anyhow::Context;
 
 fn read_non_existing_file() -> anyhow::Result<String> {
-    let text = std::fs::read_to_string("non_exising_file.txt")
-        .context("Cannot read non_exising_file.txt")?;
+    let text = std::fs::read_to_string("non_existing_file.txt")
+        .context("Cannot read non_existing_file.txt")?;
     Ok(text)
 }
 
@@ -735,12 +735,12 @@ fn main() {
 ```
 $ cargo run
 Failed with error: No such file or directory (os error 2)
-Error context: Cannot read non_exising_file.txt
+Error context: Cannot read non_existing_file.txt
 ```
 
-Как видите, если бы мы не использовали контекст, то получили бы малоинформативное описание ошибки "No such file or directory (os error 2)". Однако при помощи контекста, мы смогли указать какой именно файл отсутствует.
+Как видите, если бы мы не использовали контекст, то получили бы малоинформативное описание ошибки "No such file or directory (os error 2)". Однако при помощи контекста мы смогли указать, какой именно файл отсутствует.
 
 ## Общие рекомендации по работе с ошибками
 
 * Когда вы пишете библиотеку, то рекомендуется использовать конкретные и детальные типы ошибок. Для облегчения создания типов ошибок рекомендуется использовать thiserror.
-* При написании конечного приложения, в участках где нет возможности должным образом обработать каждый тип ошибки отдельно, используйте anyhow, так как он сильно упрощает работу с ошибками.
+* При написании конечного приложения в участках, где нет возможности должным образом обработать каждый тип ошибки отдельно, используйте anyhow, так как он сильно упрощает работу с ошибками.

@@ -6,11 +6,11 @@
 Существует популярная библиотека [Testcontainers](https://testcontainers.com/), которая значительно упрощает интеграционное тестирование с реальными системами, так как берёт на себя всю рутину по:
 
 * запуску тестового контейнера в начале теста
-* взаимодействию с с контейнером
+* взаимодействию с контейнером
 * завершению работы контейнера после окончания теста
 
 > [!TIP]
-> Если вы писали бэкенд приложения на Java, C#, Python, Ruby и т.д. то вы скорее всего уже сталкивались с вариацией библиотеки Testcontainers для вашего языка.
+> Если вы писали бэкенд приложения на Java, C#, Python, Ruby и т.д., то вы, скорее всего, уже сталкивались с вариацией библиотеки Testcontainers для вашего языка.
 
 ***
 
@@ -21,10 +21,10 @@
 * `fetch_accounts()` — вычитывает все аккаунты из БД
 * `insert_accounts(owner_name, initial_balance)` — вставляет новый аккаунт с заданным именем и начальным балансом
 
-Однако, в этот раз нас больше интересует не сама программа, а тестирование функций, взаимодействующих с БД. Тест, который мы напишем при помощи Testcontainers будет:
+Однако в этот раз нас больше интересует не сама программа, а тестирование функций, взаимодействующих с БД. Тест, который мы напишем при помощи Testcontainers, будет:
 
 1. Поднимать новый контейнер с PostgreSQL
-2. При помощи SQLx миграции, создавать таблицы в базе данных
+2. При помощи SQLx миграции создавать таблицы в базе данных
 3. Вызывать функцию `insert_accounts`, чтобы вставить новый аккаунт
 4. Вызывать функцию `fetch_accounts`, и проверять, что результат содержит только что созданный аккаунт
 
@@ -166,7 +166,7 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 ***
 
-Теперь, давайте разберём на участок кода, где создаётся контейнер:
+Теперь давайте разберём участок кода, где создаётся контейнер:
 
 ```rust,noplayground
 let container = GenericImage::new("postgres", "18")
@@ -183,15 +183,15 @@ let container = GenericImage::new("postgres", "18")
 Здесь:
 
 * `GenericImage::new("postgres", "18")` — указывает, что мы хотим создать контейнер на основе образа [postgres](https://hub.docker.com/_/postgres) из [https://hub.docker.com/](https://hub.docker.com/). Аргумент `"18"` — это тег образа.
-* `.with_wait_for` — задаёт условия, которого необходимо дождаться, перед тем как с контейнером можно будет начинать работать. В нашем случаем мы ожидаем момент, когда postgresql сервер внутри контейнера, напечатает в консоль строку "database system is ready to accept connections".
+* `.with_wait_for` — задаёт условие, которого необходимо дождаться перед тем, как с контейнером можно будет начинать работать. В нашем случае мы ожидаем момент, когда postgresql сервер внутри контейнера, напечатает в консоль строку "database system is ready to accept connections".
 * `.with_exposed_port(5432.tcp())` — указывает, что мы хотим отобразить порт 5432 из контейнера на случайный свободный порт на хостовой системе. Номер порта на хостовой системе можно будет получить из объекта контейнера.
-* `.with_env_var("POSTGRES_PASSWORD", "1111")` — проталкивает в контейнер переменную окружения `POSTGRES_PASSWORD` равную `1111`. Согласно документации образа на Docker hub странице, таким способом мы задаём пароль для базы данных в контейнере. Логин по умолчанию — "postgres"
+* `.with_env_var("POSTGRES_PASSWORD", "1111")` — проталкивает в контейнер переменную окружения `POSTGRES_PASSWORD`, равную `1111`. Согласно документации образа на Docker hub странице, таким способом мы задаём пароль для базы данных в контейнере. Логин по умолчанию — "postgres"
 
 Аналогичным образом можно поднять и любой другой, доступный на Docker hub образ. По завершению теста, все контейнеры будут автоматически потушены, даже если тест завершился с ошибкой.
 
 ## Testcontainers Modules
 
-В пару к крэйту testcontainers, существует еще крэйт [testcontainers-modules](https://crates.io/crates/testcontainers-modules), который содержит удобные обёртки для популярных Docker образов. Разумеется обёртка для PostgreSQL образа присутствует среди них.
+В пару к крэйту testcontainers существует еще крэйт [testcontainers-modules](https://crates.io/crates/testcontainers-modules), который содержит удобные обёртки для популярных Docker образов. Разумеется, обёртка для PostgreSQL образа присутствует среди них.
 
 Добавим в `Cargo.toml` зависимость на testcontainers-modules:
 
@@ -220,4 +220,4 @@ let connection_options = PgConnectOptions::new()
 
 Как видите, код запуска postgresql контейнера стал заметно короче и проще.
 
-Так же testcontainers-modules предлагает подобные обёртки для Anvil, Azurite, CockroachDB, Clickhouse, Consul, DynamoDB, ElasticSearch, Kafka, Localstack, Minio, MongoDB, MS SQL Server, MySQL, Nats, Neo4J, OpenLDAP, Oracle, OrientDB, RabbitMQ, Redis, RQLitem Scylladb, Solr, SurrealDB и Zookeeper.
+Также testcontainers-modules предлагает подобные обёртки для Anvil, Azurite, CockroachDB, Clickhouse, Consul, DynamoDB, ElasticSearch, Kafka, Localstack, Minio, MongoDB, MS SQL Server, MySQL, Nats, Neo4J, OpenLDAP, Oracle, OrientDB, RabbitMQ, Redis, RQLitem Scylladb, Solr, SurrealDB и Zookeeper.
